@@ -36,6 +36,22 @@ describe('production request resilience', () => {
     expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
+  it('retries login once while the free API service is waking', async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, 'fetch')
+      .mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      .mockResolvedValueOnce(
+        okJson({ accessToken: 'token', user: { id: 'user-1' } }),
+      )
+
+    await api.login({
+      email: 'pavan@example.com',
+      password: 'a-strong-passphrase',
+    })
+
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+  })
+
   it('reuses one creation key when a habit request is retried', async () => {
     const fetchMock = vi
       .spyOn(globalThis, 'fetch')

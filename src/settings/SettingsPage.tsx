@@ -1,7 +1,9 @@
 import AccessibilityNewRounded from '@mui/icons-material/AccessibilityNewRounded'
 import AccountCircleRounded from '@mui/icons-material/AccountCircleRounded'
 import AutoAwesomeRounded from '@mui/icons-material/AutoAwesomeRounded'
+import ContactSupportRounded from '@mui/icons-material/ContactSupportRounded'
 import LanguageRounded from '@mui/icons-material/LanguageRounded'
+import MailOutlineRounded from '@mui/icons-material/MailOutlineRounded'
 import PaletteRounded from '@mui/icons-material/PaletteRounded'
 import {
   Alert,
@@ -9,6 +11,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Container,
   Divider,
   FormControl,
@@ -363,6 +366,61 @@ export function SettingsPage() {
 
             <Divider />
 
+            <SectionTitle
+              icon={<ContactSupportRounded />}
+              title="Support"
+              description="A trusted path to help when something interrupts your growth."
+            />
+            <Box
+              sx={{
+                position: 'relative',
+                overflow: 'hidden',
+                p: { xs: 2.5, sm: 3 },
+                borderRadius: 4,
+                border: 1,
+                borderColor: 'divider',
+                background:
+                  'linear-gradient(135deg, rgba(47, 101, 80, 0.12), rgba(245, 201, 99, 0.16))',
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  width: 150,
+                  height: 150,
+                  borderRadius: '50%',
+                  right: -55,
+                  bottom: -85,
+                  border: '24px solid',
+                  borderColor: 'rgba(47, 101, 80, 0.08)',
+                },
+              }}
+            >
+              <Stack spacing={1.5} position="relative" zIndex={1}>
+                <Chip
+                  label="COMING SOON"
+                  size="small"
+                  color="primary"
+                  sx={{ alignSelf: 'flex-start', fontWeight: 800 }}
+                />
+                <Typography variant="h3" fontSize={{ xs: 24, sm: 28 }}>
+                  Help, with a human heartbeat.
+                </Typography>
+                <Typography color="text.secondary" maxWidth={600}>
+                  We are preparing a verified Arohan support address and a
+                  simple help space. Until they are ready, no unofficial email
+                  or contact link will be shown here.
+                </Typography>
+                <Button
+                  disabled
+                  startIcon={<MailOutlineRounded />}
+                  sx={{ alignSelf: 'flex-start' }}
+                >
+                  Support desk is growing
+                </Button>
+              </Stack>
+            </Box>
+
+            <Divider />
+
             <Button
               variant="contained"
               onClick={save}
@@ -383,4 +441,3 @@ export function SettingsPage() {
     </Container>
   )
 }
-

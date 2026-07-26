@@ -91,10 +91,15 @@ export const api = {
       body: JSON.stringify(input),
     }),
   login: (input: { email: string; password: string }) =>
-    request<AuthResponse>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(input),
-    }),
+    request<AuthResponse>(
+      '/auth/login',
+      {
+        method: 'POST',
+        body: JSON.stringify(input),
+      },
+      null,
+      true,
+    ),
   me: (token: string) => request<User>('/users/me', {}, token),
   updatePreferences: (token: string, input: PreferencesInput) =>
     request<User>(
