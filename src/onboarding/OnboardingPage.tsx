@@ -73,6 +73,17 @@ const templates = [
   },
 ] as const
 
+function detectedTimeZone(fallback = 'UTC') {
+  try {
+    const detected = Intl.DateTimeFormat().resolvedOptions().timeZone
+    if (!detected?.trim()) return fallback
+    new Intl.DateTimeFormat('en', { timeZone: detected }).format()
+    return detected
+  } catch {
+    return fallback
+  }
+}
+
 export function OnboardingPage() {
   const { user, updatePreferences } = useAuth()
   const navigate = useNavigate()
@@ -80,7 +91,7 @@ export function OnboardingPage() {
   const [displayName, setDisplayName] = useState(user?.displayName ?? '')
   const [timeZone, setTimeZone] = useState(
     user?.timeZone === 'UTC'
-      ? Intl.DateTimeFormat().resolvedOptions().timeZone
+      ? detectedTimeZone()
       : (user?.timeZone ?? 'UTC'),
   )
   const [themePreference, setThemePreference] = useState<ThemePreference>(
@@ -125,8 +136,12 @@ export function OnboardingPage() {
         starterTemplateKeys: selected,
       })
       navigate('/', { replace: true })
-    } catch {
-      setError('Your choices could not be saved. Please check them and try again.')
+    } catch (caught) {
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : 'Your choices could not be saved. Please check them and try again.',
+      )
       setSaving(false)
     }
   }

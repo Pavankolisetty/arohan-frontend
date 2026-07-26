@@ -44,17 +44,31 @@ async function request<T>(
   path: string,
   options: RequestInit = {},
   token?: string | null,
+  retryTransient = false,
 ): Promise<T> {
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  })
+  let response: Response
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    })
+  } catch (error) {
+    if (retryTransient) {
+      await new Promise((resolve) => window.setTimeout(resolve, 900))
+      return request<T>(path, options, token, false)
+    }
+    throw error
+  }
 
   if (!response.ok) {
+    if (retryTransient && [502, 503, 504].includes(response.status)) {
+      await new Promise((resolve) => window.setTimeout(resolve, 900))
+      return request<T>(path, options, token, false)
+    }
     const body = (await response.json().catch(() => ({}))) as ApiErrorBody
     throw new ApiError(
       body.message ?? 'Something interrupted your flow. Please try again.',
@@ -87,6 +101,7 @@ export const api = {
       '/users/me',
       { method: 'PATCH', body: JSON.stringify(input) },
       token,
+      true,
     ),
   lifeAreas: (token: string, includeArchived = false) =>
     request<LifeArea[]>(
@@ -141,6 +156,7 @@ export const api = {
       '/growth-habits',
       { method: 'POST', body: JSON.stringify(input) },
       token,
+      true,
     ),
   updateGrowthHabit: (token: string, id: string, input: GrowthHabitInput) =>
     request<GrowthHabit>(

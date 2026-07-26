@@ -58,6 +58,7 @@ const tracking: { value: TrackingMethod; label: string }[] = [
 ]
 
 const blank = (areaId: string): GrowthHabitInput => ({
+  clientRequestId: crypto.randomUUID(),
   kind: 'GROWTH_HABIT',
   lifeAreaId: areaId,
   name: '',
@@ -86,6 +87,7 @@ const blank = (areaId: string): GrowthHabitInput => ({
 
 function fromHabit(habit: GrowthHabit): GrowthHabitInput {
   return {
+    clientRequestId: crypto.randomUUID(),
     kind: habit.kind,
     lifeAreaId: habit.lifeAreaId,
     name: habit.name,
@@ -118,7 +120,7 @@ export function GrowthHabitDialog({
   preferredAreaId?: string
   initial?: GrowthHabit | null
   onClose: () => void
-  onSaved: () => void
+  onSaved: (habit: GrowthHabit) => Promise<void> | void
 }) {
   const { token } = useAuth()
   const activeAreas = useMemo(
@@ -182,9 +184,10 @@ export function GrowthHabitDialog({
     setSaving(true)
     setError('')
     try {
-      if (initial) await api.updateGrowthHabit(token, initial.id, form)
-      else await api.createGrowthHabit(token, form)
-      onSaved()
+      const saved = initial
+        ? await api.updateGrowthHabit(token, initial.id, form)
+        : await api.createGrowthHabit(token, form)
+      await onSaved(saved)
       onClose()
     } catch (caught) {
       setError(caught instanceof ApiError ? caught.message : 'Could not save this Growth Habit.')

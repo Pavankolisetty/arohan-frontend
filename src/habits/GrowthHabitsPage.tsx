@@ -87,11 +87,13 @@ export function GrowthHabitsPage() {
     queryFn: () => api.growthHabits(token!, { status: status === 'ALL' ? undefined : status, lifeAreaId: areaId || undefined }),
     enabled: Boolean(token),
   })
-  const refresh = () => {
-    client.invalidateQueries({ queryKey: ['growth-habits'] })
-    client.invalidateQueries({ queryKey: ['life-areas'] })
-    client.invalidateQueries({ queryKey: ['today-rhythm'] })
-    client.invalidateQueries({ queryKey: ['growth-studio'] })
+  const refresh = async () => {
+    await Promise.all([
+      client.invalidateQueries({ queryKey: ['growth-habits'] }),
+      client.invalidateQueries({ queryKey: ['life-areas'] }),
+      client.invalidateQueries({ queryKey: ['today-rhythm'] }),
+      client.invalidateQueries({ queryKey: ['growth-studio'] }),
+    ])
   }
   const action = useMutation({
     mutationFn: ({ habit, next }: { habit: GrowthHabit; next: 'pause' | 'restart' | 'archive' }) => api.growthHabitAction(token!, habit.id, next),

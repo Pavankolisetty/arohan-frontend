@@ -138,6 +138,7 @@ export interface GrowthHabit {
 }
 
 export interface GrowthHabitInput {
+  clientRequestId: string
   kind: HabitKind
   lifeAreaId: string
   name: string
