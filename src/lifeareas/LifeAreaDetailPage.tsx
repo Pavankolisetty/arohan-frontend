@@ -61,7 +61,7 @@ export function LifeAreaDetailPage() {
         <Button component={Link} to={`/growth-habits?area=${area.id}`} variant="contained" startIcon={<AddRounded />}>Create a Growth Habit</Button>
       </Stack>
       <Box sx={{ display: 'grid', gap: 1.5 }}>
-        {(habits.data ?? []).map((habit) => <Card key={habit.id}><CardContent><Stack direction="row" justifyContent="space-between"><Box><Typography fontWeight={800}>{habit.name}</Typography><Typography variant="body2" color="text.secondary">Easy Start Cue: {habit.cueNote}</Typography></Box><Chip label={habit.status.toLowerCase()} /></Stack></CardContent></Card>)}
+        {(habits.data ?? []).map((habit) => <Card key={habit.id}><CardContent><Stack direction="row" justifyContent="space-between"><Box><Typography fontWeight={800}>{habit.name}</Typography><Typography variant="body2" color="text.secondary">{habit.purpose}</Typography></Box><Chip label={habit.status.toLowerCase()} /></Stack></CardContent></Card>)}
         {habits.data?.length === 0 && <Typography color="text.secondary">This area has no Growth Habits yet.</Typography>}
       </Box>
       {areaDialog && <LifeAreaDialog open areas={[area]} initial={area} onClose={() => setAreaDialog(false)} onSaved={refresh} />}

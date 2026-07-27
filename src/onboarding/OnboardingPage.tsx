@@ -135,6 +135,7 @@ export function OnboardingPage() {
         onboardingComplete: true,
         starterTemplateKeys: selected,
       })
+      localStorage.setItem('arohan:quick-tour', 'pending')
       navigate('/', { replace: true })
     } catch (caught) {
       setError(
@@ -170,9 +171,9 @@ export function OnboardingPage() {
         </Typography>
         <Typography color="text.secondary" fontSize={17}>
           {step === 1
-            ? 'Choose any starting points that feel useful. Nothing is required, and you can reshape them later.'
+            ? 'Choose what matters now. Arohan will prepare one gentle weekday habit for each choice.'
             : step === 2
-              ? 'Arohan will begin quietly. Your first real Life Areas and Growth Habits are always yours to shape.'
+              ? 'Your selected Life Areas and their first weekday habits will be ready when you enter.'
               : 'A few preferences help your daily rhythm feel natural from the start.'}
         </Typography>
       </Stack>
@@ -301,10 +302,9 @@ export function OnboardingPage() {
               <Typography variant="h3">A calm foundation, not a rigid plan.</Typography>
               <Typography color="text.secondary">
                 You chose {selected.length || 'no'} starter
-                {selected.length === 1 ? '' : 's'}. These are saved as inspiration;
-                no habits will be created without you. Next, your Home will give you
-                an honest starting view while Phase 2 opens Life Areas and Easy Start
-                Cues.
+                {selected.length === 1 ? '' : 's'}. Arohan will create one Life Area
+                and one simple Monday-to-Friday habit for each choice. You can rename,
+                reschedule or remove anything later.
               </Typography>
               <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                 {selected.length ? (

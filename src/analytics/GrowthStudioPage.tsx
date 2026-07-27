@@ -4,7 +4,6 @@ import HelpOutlineRounded from '@mui/icons-material/HelpOutlineRounded'
 import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import KeyboardReturnRounded from '@mui/icons-material/KeyboardReturnRounded'
 import SpaRounded from '@mui/icons-material/SpaRounded'
-import TrendingFlatRounded from '@mui/icons-material/TrendingFlatRounded'
 import {
   Alert,
   alpha,
@@ -22,7 +21,6 @@ import {
   FormControl,
   IconButton,
   InputLabel,
-  LinearProgress,
   MenuItem,
   Select,
   Stack,
@@ -123,7 +121,7 @@ export function GrowthStudioPage() {
   const [areaId, setAreaId] = useState('')
   const [day, setDay] = useState<RhythmDay | null>(null)
   const [pulseHelpOpen, setPulseHelpOpen] = useState(false)
-  const [studioHelp, setStudioHelp] = useState<'compass' | 'cue' | 'journey' | null>(null)
+  const [studioHelp, setStudioHelp] = useState<'compass' | 'journey' | null>(null)
   const [lensRange, setLensRange] = useState<LifeAreaLensRange>('MONTH')
   const to = new Date().toISOString().slice(0, 10)
   const from = dateBefore(range - 1)
@@ -168,13 +166,6 @@ export function GrowthStudioPage() {
     })),
     [data?.lifeAreas],
   )
-  const cueStages = [
-    { label: 'Cue available', value: data?.cueFlow.cueReady ?? 0, note: 'Scheduled moments where an Easy Start Cue was ready' },
-    { label: 'Cue started', value: data?.cueFlow.cueStarts ?? 0, note: 'Times you tapped Begin cue' },
-    { label: 'Practice followed', value: data?.cueFlow.fullPracticesAfterStart ?? 0, note: 'Cue starts followed by completed or partial practice' },
-    { label: 'Reflected', value: data?.cueFlow.reflections ?? 0, note: 'Cue-led practices with a written reflection' },
-  ]
-  const cueMaximum = Math.max(1, cueStages[0].value)
 
   if (query.isLoading) {
     return <Box minHeight="80vh" display="grid" sx={{ placeItems: 'center' }}><CircularProgress /></Box>
@@ -677,59 +668,7 @@ export function GrowthStudioPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent sx={{ p: 3 }}>
-            <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={1}>
-              <Box>
-                <Typography variant="overline" color="primary" fontWeight={800}>Cue-to-Flow</Typography>
-                <Typography variant="h3" fontSize={25}>Where beginning becomes practice</Typography>
-              </Box>
-              <IconButton aria-label="How Cue-to-Flow works" onClick={() => setStudioHelp('cue')}><HelpOutlineRounded /></IconButton>
-            </Stack>
-            <Typography variant="body2" color="text.secondary" mt={0.5}>
-              Follow what happens after an Easy Start Cue becomes available.
-            </Typography>
-            <Stack mt={2.5} spacing={1.7}>
-              {cueStages.map((stage, index) => (
-                <Stack key={stage.label} direction="row" spacing={1.25} alignItems="flex-start">
-                  <Box
-                    sx={{
-                      width: 30,
-                      height: 30,
-                      flex: '0 0 auto',
-                      borderRadius: '52% 16% 52% 16%',
-                      bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12 + index * 0.06),
-                      display: 'grid',
-                      placeItems: 'center',
-                      fontWeight: 850,
-                    }}
-                  >
-                    {index + 1}
-                  </Box>
-                  <Box flex={1}>
-                    <Stack direction="row" justifyContent="space-between" spacing={1}>
-                      <Typography fontWeight={800}>{stage.label}</Typography>
-                      <Typography fontWeight={850}>{stage.value}</Typography>
-                    </Stack>
-                    <LinearProgress
-                      variant="determinate"
-                      value={Math.min(100, stage.value / cueMaximum * 100)}
-                      sx={{ height: 7, borderRadius: 8, my: 0.55, bgcolor: 'action.hover' }}
-                    />
-                    <Typography variant="caption" color="text.secondary">{stage.note}</Typography>
-                  </Box>
-                </Stack>
-              ))}
-            </Stack>
-            <Typography variant="body2" color="text.secondary" mt={2}>
-              {data?.cueFlow.ready
-                ? `${data.cueFlow.completedAfterStartPercent ?? 0}% of started cues flowed into practice.`
-                : `${data?.cueFlow.cueStarts ?? 0} of 3 cue starts recorded; Arohan waits before drawing a conclusion.`}
-            </Typography>
-          </CardContent>
-        </Card>
-
-        <Card>
+        <Card sx={{ gridColumn: { lg: '1 / -1' } }}>
           <CardContent sx={{ p: 3 }}>
             <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={1}>
               <Box>
@@ -790,10 +729,9 @@ export function GrowthStudioPage() {
           <CardContent sx={{ p: { xs: 3, md: 4 } }}>
             <Stack direction="row" spacing={1} alignItems="center"><AutoAwesomeRounded color="primary" /><Typography variant="overline" color="primary" fontWeight={800}>Progress Story</Typography></Stack>
             <Typography variant="h2" fontSize={30} mt={1}>{data?.progressStory.title}</Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 2, mt: 2 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2, mt: 2 }}>
               <Story icon={<CheckCircleRounded />} title="Evidence" text={data?.progressStory.evidence} />
               <Story icon={<KeyboardReturnRounded />} title="Recovery" text={data?.progressStory.recovery} />
-              <Story icon={<TrendingFlatRounded />} title="Strongest cue" text={data?.progressStory.strongestCue} />
               <Story icon={<AutoAwesomeRounded />} title="Next experiment" text={data?.progressStory.nextExperiment} />
             </Box>
             <Typography variant="body2" color="text.secondary" mt={2}>Recurring barrier: {data?.progressStory.recurringBarrier}</Typography>
@@ -804,7 +742,6 @@ export function GrowthStudioPage() {
       <Dialog open={Boolean(studioHelp)} onClose={() => setStudioHelp(null)} fullWidth maxWidth="sm">
         <DialogTitle>
           {studioHelp === 'compass' && 'Reading your Life Compass'}
-          {studioHelp === 'cue' && 'Reading Cue-to-Flow'}
           {studioHelp === 'journey' && 'Reading your Skill Journey'}
         </DialogTitle>
         <DialogContent>
@@ -821,20 +758,6 @@ export function GrowthStudioPage() {
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 “No moments yet” means the selected period contained no eligible schedule—it is different from 0% completion.
-              </Typography>
-            </Stack>
-          )}
-          {studioHelp === 'cue' && (
-            <Stack spacing={1.5}>
-              <Typography color="text.secondary">
-                This path checks whether the tiny beginning you designed actually helps practice happen.
-              </Typography>
-              <Typography><strong>Cue available</strong> counts genuine scheduled opportunities.</Typography>
-              <Typography><strong>Cue started</strong> counts taps on Begin cue.</Typography>
-              <Typography><strong>Practice followed</strong> counts completed or partial practices after that tap.</Typography>
-              <Typography><strong>Reflected</strong> counts those cue-led practices with a written reflection.</Typography>
-              <Typography variant="body2" color="text.secondary">
-                Three cue starts are required before showing an effectiveness percentage, so one isolated event does not become a conclusion.
               </Typography>
             </Stack>
           )}

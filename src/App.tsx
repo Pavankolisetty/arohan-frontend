@@ -70,11 +70,6 @@ const ReflectionSpacePage = lazy(() =>
     default: module.ReflectionSpacePage,
   })),
 )
-const GrowthSignalsPage = lazy(() =>
-  import('./signals/GrowthSignalsPage').then((module) => ({
-    default: module.GrowthSignalsPage,
-  })),
-)
 
 function RouteTree() {
   const { user, loading } = useAuth()
@@ -124,7 +119,6 @@ function RouteTree() {
         <Route path="financial-flow" element={<FinancialFlowPage />} />
         <Route path="financial-flow/insights" element={<FinancialInsightsPage />} />
         <Route path="reflection-space" element={<ReflectionSpacePage />} />
-        <Route path="growth-signals" element={<GrowthSignalsPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

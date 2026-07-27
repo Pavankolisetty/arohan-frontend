@@ -4,7 +4,6 @@ import AutoStoriesRounded from '@mui/icons-material/AutoStoriesRounded'
 import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded'
 import CategoryRounded from '@mui/icons-material/CategoryRounded'
 import HomeRounded from '@mui/icons-material/HomeRounded'
-import InsightsRounded from '@mui/icons-material/InsightsRounded'
 import SettingsRounded from '@mui/icons-material/SettingsRounded'
 import SpaRounded from '@mui/icons-material/SpaRounded'
 
@@ -24,6 +23,5 @@ export const navigation = [
     path: '/reflection-space',
     icon: AutoStoriesRounded,
   },
-  { label: 'Growth Signals', path: '/growth-signals', icon: InsightsRounded },
   { label: 'Settings', path: '/settings', icon: SettingsRounded },
 ]

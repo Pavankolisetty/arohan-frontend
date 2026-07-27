@@ -3,7 +3,6 @@ import ArrowForwardRounded from '@mui/icons-material/ArrowForwardRounded'
 import AutoAwesomeRounded from '@mui/icons-material/AutoAwesomeRounded'
 import CheckRounded from '@mui/icons-material/CheckRounded'
 import EditRounded from '@mui/icons-material/EditRounded'
-import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded'
 import ReplayRounded from '@mui/icons-material/ReplayRounded'
 import {
   alpha,
@@ -38,7 +37,6 @@ function statusLabel(habit: TodayHabit) {
   if (habit.entry?.status === 'COMPLETED') return 'Completed'
   if (habit.entry?.status === 'PARTIAL') return 'Partial practice'
   if (habit.entry?.status === 'SKIPPED') return 'Consciously skipped'
-  if (habit.entry?.cueStartedAt) return 'Easy Start begun'
   return habit.opportunityType === 'FLEXIBLE'
     ? 'Available this week'
     : habit.opportunityType === 'CUSTOM'
@@ -62,12 +60,6 @@ export function TodayPage() {
     client.invalidateQueries({ queryKey: ['today-rhythm'] })
     client.invalidateQueries({ queryKey: ['growth-studio'] })
   }
-  const cue = useMutation({
-    mutationFn: (habit: TodayHabit) => api.startCue(token!, habit.habitId, date),
-    onSuccess: refresh,
-    onError: (caught) =>
-      setError(caught instanceof ApiError ? caught.message : 'Could not record the cue start.'),
-  })
   const record = useMutation({
     mutationFn: ({ habit, input }: { habit: TodayHabit; input: PracticeInput }) =>
       api.recordPractice(token!, habit.habitId, date, input),
@@ -155,7 +147,7 @@ export function TodayPage() {
                     position: 'relative',
                     overflow: 'hidden',
                     height: '100%',
-                    minHeight: 330,
+                    minHeight: 245,
                     opacity: habit.entry?.status === 'SKIPPED' ? 0.72 : 1,
                     borderTop: '4px solid',
                     borderTopColor: habit.lifeAreaColor,
@@ -181,25 +173,8 @@ export function TodayPage() {
                     </Stack>
                     <Typography variant="h3" fontSize={22}>{habit.name}</Typography>
                     <Typography color="text.secondary" variant="body2" mt={0.4}>{habit.purpose}</Typography>
-                    <Box
-                      sx={{
-                        mt: 1.75,
-                        p: 1.6,
-                        borderRadius: 2,
-                        bgcolor: alpha(habit.lifeAreaColor, 0.08),
-                        borderLeft: '3px solid',
-                        borderLeftColor: habit.lifeAreaColor,
-                      }}
-                    >
-                      <Typography variant="overline" fontWeight={800} sx={{ color: habit.lifeAreaColor }}>Easy Start Cue</Typography>
-                      <Typography fontWeight={750} lineHeight={1.3}>{habit.cueNote}</Typography>
-                      <Typography variant="caption" color="text.secondary">Two-minute version: {habit.twoMinuteStarter}</Typography>
-                    </Box>
                     <Box flex={1} minHeight={14} />
                     <Stack direction="row" flexWrap="wrap" spacing={0.75} useFlexGap mt={1.5}>
-                        {!resolved && !habit.entry?.cueStartedAt && (
-                          <Button size="small" variant="outlined" startIcon={<PlayArrowRounded />} onClick={() => cue.mutate(habit)}>Begin cue</Button>
-                        )}
                         {!resolved && (
                           <Button
                             size="small"

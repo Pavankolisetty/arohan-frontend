@@ -5,7 +5,7 @@ import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded'
 import CategoryRounded from '@mui/icons-material/CategoryRounded'
 import MenuBookRounded from '@mui/icons-material/MenuBookRounded'
 import SpaRounded from '@mui/icons-material/SpaRounded'
-import TipsAndUpdatesRounded from '@mui/icons-material/TipsAndUpdatesRounded'
+import AccountBalanceWalletRounded from '@mui/icons-material/AccountBalanceWalletRounded'
 import {
   alpha,
   Box,
@@ -47,11 +47,6 @@ export function HomePage() {
     queryFn: () => api.lifeAreas(token!),
     enabled: Boolean(token),
   })
-  const signals = useQuery({
-    queryKey: ['growth-signals', 'home'],
-    queryFn: () => api.explainableGrowthSignals(token!),
-    enabled: Boolean(token),
-  })
   const now = new Date()
   const greeting =
     now.getHours() < 12 ? 'Good morning' : now.getHours() < 18 ? 'Good afternoon' : 'Good evening'
@@ -78,9 +73,6 @@ export function HomePage() {
       icon: '✦',
       detail: `${area.habitCount} Growth Habits`,
     })) ?? areaSeeds.map((area) => ({ ...area, detail: 'Starter inspiration' }))
-  const recentSignal =
-    signals.data?.signals.find((signal) => signal.ready) ??
-    signals.data?.signals[0]
 
   return (
     <Container maxWidth="xl" sx={{ py: { xs: 2, md: 5 }, px: { xs: 2, md: 5 } }}>
@@ -300,20 +292,17 @@ export function HomePage() {
         <Card variant="outlined">
           <CardContent sx={{ p: 3 }}>
             <Stack direction="row" spacing={1.5} alignItems="center">
-              <TipsAndUpdatesRounded color="primary" />
+              <AccountBalanceWalletRounded color="primary" />
               <Box>
-                <Typography variant="overline">RECENT GROWTH SIGNAL</Typography>
-                <Typography variant="h5">
-                  {recentSignal?.title ?? 'Your patterns will appear gently.'}
-                </Typography>
+                <Typography variant="overline">FINANCIAL FLOW</Typography>
+                <Typography variant="h5">Give money a clear, calm direction.</Typography>
               </Box>
             </Stack>
             <Typography color="text.secondary" sx={{ mt: 1 }}>
-              {recentSignal?.summary ??
-                'Arohan waits for enough evidence and always explains how a signal was noticed.'}
+              Record income, spending and savings, then see how the month is taking shape.
             </Typography>
-            <Button component={Link} to="/growth-signals" sx={{ mt: 1.5, px: 0 }}>
-              Explore Growth Signals
+            <Button component={Link} to="/financial-flow" sx={{ mt: 1.5, px: 0 }}>
+              Open Financial Flow
             </Button>
           </CardContent>
         </Card>

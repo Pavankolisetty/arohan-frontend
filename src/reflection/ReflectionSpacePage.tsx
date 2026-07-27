@@ -185,7 +185,6 @@ function ReflectionDialog({
         : api.createReflection(token!, form),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reflections'] })
-      queryClient.invalidateQueries({ queryKey: ['growth-signals'] })
       onClose()
     },
     onError: (reason) =>
@@ -371,7 +370,6 @@ export function ReflectionSpacePage() {
     mutationFn: (id: string) => api.deleteReflection(token!, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reflections'] })
-      queryClient.invalidateQueries({ queryKey: ['growth-signals'] })
       setDeleteTarget(null)
     },
   })
@@ -508,7 +506,7 @@ export function ReflectionSpacePage() {
                   ))}
                 </TextField>
                 <Typography variant="body2" color="text.secondary">
-                  Search stays inside your own reflections. Growth Signals use counts and tags—not hidden personality judgments.
+                  Search stays inside your own reflections, so your private notes remain easy to revisit.
                 </Typography>
               </Box>
             </CardContent>

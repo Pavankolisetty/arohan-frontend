@@ -115,7 +115,7 @@ export function GrowthHabitsPage() {
         <Box>
           <Typography variant="overline" color="primary" fontWeight={800}>Intentions made begin-able</Typography>
           <Typography variant="h1" fontSize={{ xs: 40, md: 56 }}>Growth Habits</Typography>
-          <Typography color="text.secondary" mt={1} maxWidth={700}>Build a reliable beginning with an Easy Start Cue, then let the rhythm fit your actual life.</Typography>
+          <Typography color="text.secondary" mt={1} maxWidth={700}>Keep each practice connected to a Life Area and a rhythm that fits real life.</Typography>
         </Box>
         <Button variant="contained" startIcon={<AddRounded />} disabled={!canCreate} onClick={() => { setEditing(null); setDialog(true) }}>Plant a Growth Habit</Button>
       </Stack>
@@ -157,11 +157,6 @@ export function GrowthHabitsPage() {
                   <IconButton onClick={(event) => setMenu({ anchor: event.currentTarget, habit })} aria-label={`Options for ${habit.name}`}><MoreHorizRounded /></IconButton>
                 </Stack>
                 <Typography color="text.secondary" mt={1}>{habit.purpose}</Typography>
-                <Box sx={{ mt: 2.5, p: 2, borderRadius: 3, bgcolor: alpha(habit.lifeAreaColor, 0.08) }}>
-                  <Typography variant="overline" fontWeight={800} sx={{ color: habit.lifeAreaColor }}>Easy Start Cue</Typography>
-                  <Typography fontWeight={750}>{habit.cueNote}</Typography>
-                  <Typography variant="body2" color="text.secondary" mt={0.5}>Two-minute version: {habit.twoMinuteStarter}</Typography>
-                </Box>
                 <Stack direction="row" spacing={1} mt={2} flexWrap="wrap">
                   <Chip size="small" label={rhythmLabel(habit)} />
                   <Chip size="small" label={habit.status === 'ACTIVE' ? 'In rhythm' : habit.status === 'PAUSED' ? 'Resting' : 'Archived'} />

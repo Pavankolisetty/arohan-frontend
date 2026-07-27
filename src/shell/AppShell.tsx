@@ -21,6 +21,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { BrandMark } from '../shared/BrandMark'
 import { navigation } from './navigation'
+import { QuickTour } from '../onboarding/QuickTour'
 
 const drawerWidth = 276
 
@@ -30,6 +31,14 @@ export function AppShell() {
   const mobile = useMediaQuery(theme.breakpoints.down('md'))
   const location = useLocation()
   const [anchor, setAnchor] = useState<HTMLElement | null>(null)
+  const [tourOpen, setTourOpen] = useState(
+    () => localStorage.getItem('arohan:quick-tour') === 'pending',
+  )
+
+  const closeTour = () => {
+    localStorage.removeItem('arohan:quick-tour')
+    setTourOpen(false)
+  }
 
   return (
     <Box sx={{ minHeight: '100dvh', display: 'flex' }}>
@@ -153,13 +162,9 @@ export function AppShell() {
             overflow: 'hidden',
           }}
         >
-          {[
-            navigation[0],
-            navigation[1],
-            navigation[2],
-            navigation[4],
-            navigation[8],
-          ].map(({ label, path, icon: Icon }) => {
+          {['/', '/today', '/life-areas', '/growth-studio', '/settings']
+            .map((path) => navigation.find((item) => item.path === path)!)
+            .map(({ label, path, icon: Icon }) => {
             const active =
               path === '/'
                 ? location.pathname === '/'
@@ -185,6 +190,7 @@ export function AppShell() {
           })}
         </Paper>
       )}
+      <QuickTour open={tourOpen} onClose={closeTour} />
     </Box>
   )
 }

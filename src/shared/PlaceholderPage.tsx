@@ -28,7 +28,7 @@ const copy: Record<string, { eyebrow: string; description: string; phase: string
   'Growth Habits': {
     eyebrow: 'Practices that shape identity',
     description:
-      'Build flexible Growth Habits around an Easy Start Cue, a stable context and a kind fallback.',
+      'Build flexible Growth Habits with a rhythm that fits your real week.',
     phase: 'Growth Habits arrive in Phase 2',
   },
   'Growth Studio': {
